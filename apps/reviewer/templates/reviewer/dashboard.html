@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Load Access to Django Static Files -->
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Load Django Static CSS Sheet -->
+    <link rel="stylesheet" href="{% static 'reviewer/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'reviewer/css/font-awesome-4.7.0/css/font-awesome.css' %}">
+    <title>Belt Reviewer</title>
+</head>
+<body>
+    <h1>Welcome {{current_user.first_name}}!</h1>
+    <p>
+        <!-- Add Book and Review -->
+        <a href="/books/add">Add Book and Review</a>
+        <!-- Logout -->
+        <a href="/logout">Logout</a>
+    </p>
+    <!-- Recent 3 Book Reviews -->
+    <fieldset><legend><h2>Recent Book Reviews:</h2></legend>
+        {% if 3_recent_reviews %}
+            {% for review in 3_recent_reviews %}
+                <h3><a href="/books/{{review.book.id}}">{{review.book.title}}</a></h3>
+                <blockquote>
+                    <p><strong>Rating:</strong> {% for x in review.stars %}<i class="fa fa-star fa-2x"></i>{% endfor %}{% for x in review.empty %}<i class="fa fa-star-o fa-2x"></i>{% endfor %}</p>
+                    <p><a href="/users/{{review.user.id}}">{{review.user.first_name}}</a> says: <em>{{review.description}}</em></p>
+                    <p><em>Posted on {{review.created_at}}</em></p>
+                </blockquote>
+            {% endfor %}
+        {% endif %}
+    </fieldset>
+    <!-- All Book Reviews -->
+    <fieldset><legend><h2>Other Books with Reviews:</h2></legend>
+        <div class="all_books">
+            {% if all_books %}
+                {% for book in all_books %}
+                    <p>
+                        <a href="books/{{book.id}}">{{book.title}}</a>
+                    </p>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </fieldset>
+</body>
+</html>

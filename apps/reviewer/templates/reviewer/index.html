@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Load Access to Django Static Files -->
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Load Django Static CSS Sheet -->
+    <link rel="stylesheet" href="{% static 'reviewer/css/style.css' %}">
+    <title>Book Reviewer</title>
+</head>
+<body>
+    <h1>Book Reviewer</h1>
+    <!-- Logout Success Message -->
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == "logout_succ" %}
+            <p {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                {{ message }}
+            </p>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    <!-- User Registration -->
+    <fieldset><legend>Register</legend>
+        <!-- Registration Errors -->
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == "reg_errors" %}
+                <p {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                    {{ message }}
+                </p>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        <!-- Registration Form -->
+        <form action="/" method="POST">
+            <!-- Django-required CSRF Token (to prevent spoofing) -->
+            {% csrf_token %}
+            <label for="first_name"> First Name:
+                <input type="text" name="first_name" id="first_name">
+            </label>
+            <label for="last_name"> Last Name:
+                <input type="text" name="last_name" id="last_name">
+            </label>
+            <label for="email"> Email:
+                <input type="email" name="email" id="email">
+            </label>
+            <label for="password"> Password:
+                <input type="password" name="password" id="password">
+            </label>
+            <label for="confirm_pwd"> Confirm Password:
+                <input type="password" name="confirm_pwd" id="confirm_pwd">
+            </label>
+            <input type="submit" value="Register">
+        </form>
+    </fieldset>
+    <!-- User Login -->
+    <fieldset><legend>Login</legend>
+        <!-- Login Errors -->
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == "login_errors" %}
+                <p {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                    {{ message }}
+                </p>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        <!-- Login Form -->
+        <form action="/login" method="POST">
+            <!-- Django-required CSRF Token (to prevent spoofing) -->
+            {% csrf_token %}
+            <label for="login_email"> Email:
+                <input type="email" name="login_email" id="login_email">
+            </label>
+            <label for="login_password"> Password:
+                <input type="password" name="login_password" id="login_password">
+            </label>
+            <input type="submit" value="Login">
+        </form>
+    </fieldset>
+</body>
+</html>

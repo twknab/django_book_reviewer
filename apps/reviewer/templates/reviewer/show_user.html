@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Load Access to Django Static Files -->
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Load Django Static CSS Sheet -->
+    <link rel="stylesheet" href="{% static 'reviewer/css/style.css' %}">
+    <title>Belt Reviewer</title>
+</head>
+<body>
+    <a href="/books">Home</a>
+    <a href="/books/add">Add Book and Review</a>
+    <a href="/logout">Logout</a>
+
+    <h1>User Alias: {{user.first_name}}</h1>
+    <h2>Name: {{user.first_name}} {{user.last_name}}</h2>
+    <h3>Email: {{user.email}}</h3>
+    <h3>Total Reviews: {{total_reviews}}</h3>
+
+    <h3>Posted Reviews on the following Books:</h3>
+    {% if reviewed_books %}
+    <ul>
+        {% for book in reviewed_books %}
+        <li><a href="/books/{{book.id}}">{{book.title}}</a></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Load Access to Django Static Files -->
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Load Django Static CSS Sheet -->
+    <link rel="stylesheet" href="{% static 'reviewer/css/style.css' %}">
+    <title>Belt Reviewer</title>
+</head>
+<body>
+    <h1>Add a New Book Title and a Review:</h1>
+    <!-- Home/Logout -->
+    <p>
+        <a href="/books">Home</a>
+        <a href="/logout">Logout</a>
+    </p>
+    <!-- Add Book and Review Form -->
+    <fieldset><legend>Add New Book and Review:</legend>
+        <!-- Add New Review Form -->
+        <form action="/books/add" method="POST">
+            <!-- Django-required CSRF Token (to prevent spoofing) -->
+            {% csrf_token %}
+            <!-- Review Errors -->
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == "rev_errors" %}
+                    <p {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                        {{ message }}
+                    </p>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            <!-- Book Title -->
+            <label for="book"><h3>Book Title (required):</h3>
+                <input type="text" name="book" id="book">
+            </label>
+            <!-- Book Author -->
+            <label for="author"><h3>Author:</h3>
+                Choose from the list:
+                    {% if all_authors %}
+                        <select name="author" id="author">
+                        {% for author in all_authors %}
+                            <option value="{{author.id}}">{{author.first_name}} {{author.last_name}}</option>
+                        {% endfor %}
+                        </select>
+                    {% endif %}
+            </label>
+            <!-- Add New Author (if needed) -->
+            <label for="add_author"> Or add a new author (first and last name only):
+                    <input type="text" name="add_author" id="add_author" placeholder="Leave blank if N/A.">
+            </label>
+            <!-- Review Description -->
+            <label for="description"><h3>Review (required):</h3>
+                <textarea name="description" id="description" cols="30" rows="10"></textarea>
+            </label>
+            <!-- Book Rating -->
+            <label for="rating"><h3>Rating:</h3>
+                <select name="rating" id="rating">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3" selected="selected">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </label>
+            <!-- Create Review -->
+            <input type="submit" value="Add Book and Review">
+        </form>
+    </fieldset>
+</body>
+</html>

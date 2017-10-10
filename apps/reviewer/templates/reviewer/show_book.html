@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Load Access to Django Static Files -->
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Load Django Static CSS Sheet -->
+    <link rel="stylesheet" href="{% static 'reviewer/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'reviewer/css/font-awesome-4.7.0/css/font-awesome.css' %}">
+    <title>Belt Reviewer</title>
+</head>
+<body>
+    <h1>{{book.title}}</h1>
+    <p>
+        <a href="/books">Home</a>
+        <a href="/logout">Logout</a>
+    </p>
+    <p>Author: {{book.author.first_name}} {{book.author.last_name}}</p>
+    <fieldset><legend>Add a Review (required):</legend>
+        <form action="/books/{{book.id}}" method="POST">
+            <!-- Django-required CSRF Token (to prevent spoofing) -->
+            {% csrf_token %}
+            <!-- Review Errors -->
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == "rev_errors" %}
+                    <p {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                        {{ message }}
+                    </p>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            <label for="description" id="description"><h2>Add a Review:</h2>
+                <textarea name="description" id="description" cols="30" rows="10"></textarea>
+            </label>
+            <label for="rating"><h3 id="rating">Rating:</h3>
+                <select name="rating" id="rating">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3" selected="selected">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </label>
+            <input type="submit" value="Submit Review">
+        </form>
+    </fieldset>
+    <h2>Reviews:</h2>
+    {% if all_reviews %}
+        {% for review in all_reviews %}
+            <p>Rating: {% for x in review.stars %}<i class="fa fa-star fa-2x"></i>{% endfor %}{% for x in review.empty %}<i class="fa fa-star-o fa-2x"></i>{% endfor %}</p>
+            <p><a href="/users/{{review.user.id}}">{{review.user.first_name}}</a> says: <em>{{review.description}}</em></p>
+            <p><em>Posted on: {{review.created_at}}</em></p>
+            {% if user_id == review.user.id %}<p><a href="/delete/{{review.id}}">Delete this Review</a></p>{% endif %}
+            <hr>
+        {% endfor %}
+    {% endif %}
+</body>
+</html>
